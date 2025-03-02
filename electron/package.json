@@ -1,0 +1,137 @@
+{
+  "name": "jan",
+  "version": "0.1.3",
+  "main": "./build/main.js",
+  "author": "Jan <service@jan.ai>",
+  "license": "MIT",
+  "productName": "Jan",
+  "homepage": "https://github.com/janhq/jan/tree/main/electron",
+  "description": "Use offline LLMs with your own data. Run open source models like Llama2 or Falcon on your internal computers/servers.",
+  "build": {
+    "appId": "jan.ai.app",
+    "productName": "Jan",
+    "files": [
+      "renderer/**/*",
+      "build/**/*.{js,map}",
+      "pre-install",
+      "themes",
+      "scripts/**/*",
+      "icons/**/*",
+      "themes",
+      "shared"
+    ],
+    "asarUnpack": [
+      "pre-install",
+      "themes",
+      "docs",
+      "scripts",
+      "icons",
+      "themes",
+      "shared"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "janhq",
+        "repo": "jan"
+      }
+    ],
+    "extends": null,
+    "mac": {
+      "type": "distribution",
+      "entitlements": "./entitlements.mac.plist",
+      "entitlementsInherit": "./entitlements.mac.plist",
+      "notarize": {
+        "teamId": "F8AH6NHVY5"
+      },
+      "icon": "icons/icon.png"
+    },
+    "linux": {
+      "target": [
+        "deb"
+      ],
+      "category": "Utility",
+      "icon": "icons/"
+    },
+    "win": {
+      "icon": "icons/icon.png",
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "installerIcon": "icons/icon.ico",
+      "uninstallerIcon": "icons/icon.ico",
+      "include": "scripts/uninstaller.nsh",
+      "deleteAppDataOnUninstall": true
+    },
+    "protocols": [
+      {
+        "name": "Jan",
+        "schemes": [
+          "jan"
+        ]
+      }
+    ],
+    "artifactName": "jan-${os}-${arch}-${version}.${ext}"
+  },
+  "scripts": {
+    "lint": "eslint . --ext \".js,.jsx,.ts,.tsx\"",
+    "test:e2e": "playwright test --workers=1",
+    "copy:assets": "rimraf --glob \"./pre-install/*.tgz\" && cpx \"../pre-install/*.tgz\" \"./pre-install\"",
+    "dev": "yarn copy:assets && tsc -p . && electron .",
+    "compile": "tsc -p .",
+    "start": "electron .",
+    "build": "yarn copy:assets && run-script-os",
+    "build:test": "yarn copy:assets && run-script-os",
+    "build:test:darwin": "tsc -p . && electron-builder -p never -m --dir",
+    "build:test:win32": "tsc -p . && electron-builder -p never -w --dir",
+    "build:test:linux": "tsc -p . && electron-builder -p never -l --dir",
+    "build:darwin": "tsc -p . && electron-builder -p never -m --universal",
+    "build:win32": "tsc -p . && electron-builder -p never -w",
+    "build:linux": "tsc -p . && electron-builder -p never -l deb -l AppImage",
+    "build:publish": "yarn copy:assets && run-script-os",
+    "build:publish:darwin": "tsc -p . && electron-builder -p always -m --universal",
+    "build:publish:win32": "tsc -p . && electron-builder -p always -w",
+    "build:publish:linux": "tsc -p . && electron-builder -p always -l deb -l AppImage"
+  },
+  "dependencies": {
+    "@alumna/reflect": "^1.1.3",
+    "@janhq/core": "link:./core",
+    "@janhq/server": "link:./server",
+    "@npmcli/arborist": "^7.1.0",
+    "electron-store": "^8.1.0",
+    "electron-updater": "^6.1.7",
+    "fs-extra": "^11.2.0",
+    "node-fetch": "2",
+    "pacote": "^17.0.4",
+    "request": "^2.88.2",
+    "request-progress": "^3.0.0",
+    "ulidx": "^2.3.0",
+    "@kirillvakalov/nut-tree__nut-js": "4.2.1-2"
+  },
+  "devDependencies": {
+    "@electron/notarize": "^2.5.0",
+    "@playwright/test": "^1.38.1",
+    "@types/npmcli__arborist": "^5.6.4",
+    "@types/pacote": "^11.1.7",
+    "@types/request": "^2.48.12",
+    "@typescript-eslint/eslint-plugin": "^6.7.3",
+    "@typescript-eslint/parser": "^6.7.3",
+    "electron": "30.0.6",
+    "electron-builder": "^24.13.3",
+    "electron-builder-squirrel-windows": "^24.13.3",
+    "electron-devtools-installer": "^3.2.0",
+    "electron-playwright-helpers": "^1.6.0",
+    "eslint": "8.57.0",
+    "eslint-plugin-react": "^7.34.0",
+    "rimraf": "^5.0.5",
+    "run-script-os": "^1.1.6",
+    "typescript": "^5.3.3",
+    "@reportportal/agent-js-playwright": "^5.1.7"
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  }
+}

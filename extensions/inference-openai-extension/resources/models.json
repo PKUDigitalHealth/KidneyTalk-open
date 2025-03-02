@@ -1,0 +1,58 @@
+[
+  {
+    "sources": [
+      {
+        "url": "https://openai.com"
+      }
+    ],
+    "id": "qwen2.5:7b",
+    "object": "model",
+    "name": "Qwen2.5:7B",
+    "version": "1.2",
+    "description": "Qwen2.5:7B model is extremely good",
+    "format": "api",
+    "settings": {},
+    "parameters": {
+      "max_tokens": 32768,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "stream": true,
+      "stop": [],
+      "frequency_penalty": 0,
+      "presence_penalty": 0
+    },
+    "metadata": {
+      "author": "Qwen",
+      "tags": ["General"]
+    },
+    "engine": "openai"
+  },
+  {
+    "sources": [
+      {
+        "url": "https://ollama.com/library/deepseek-r1"
+      }
+    ],
+    "id": "deepseek-r1",
+    "object": "model",
+    "name": "deepseek-r1:7B",
+    "version": "1.0",
+    "description": "DeepSeek-R1-Distill-Qwen-7B",
+    "format": "api",
+    "settings": {},
+    "parameters": {
+      "max_tokens": 32768,
+      "temperature": 0.5,
+      "top_p": 0.95,
+      "stream": true,
+      "stop": [],
+      "frequency_penalty": 0,
+      "presence_penalty": 0
+    },
+    "metadata": {
+      "author": "Deepseek",
+      "tags": ["General"]
+    },
+    "engine": "openai"
+  }
+]
