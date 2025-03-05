@@ -16,30 +16,6 @@ Key Features:
 - **MacOS**: 13 or higher
 - **Ollama**: Download and install Ollama from https://ollama.ai/. After installation, you can proceed with the next steps without worrying about Ollama anymore.
 
-## Development
-
-### Pre-requisites
-
-- node >= 20.0.0
-- yarn >= 1.22.0
-- make >= 3.81
-
-### Instructions
-
-1. **Run development and use KidneyTalk-open Desktop**
-
-   ```bash
-   make dev
-   ```
-
-This will start the development server and open the desktop app.
-
-### For production build
-
-```bash
-make build
-```
-
 ## Acknowledgements
 
 KidneyTalk-open builds on top of other open-source projects:
