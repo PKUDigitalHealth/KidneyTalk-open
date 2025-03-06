@@ -93,7 +93,8 @@ export class VectorDB {
         })
 
         let loader: DocumentLoader
-        if (filePath.endsWith('.pdf')) {
+        const isPDF = filePath.endsWith('.pdf')
+        if (isPDF) {
             loader = new PDFLoader(filePath, {
                 splitPages: true,
             })
@@ -116,9 +117,13 @@ export class VectorDB {
 
         const docs = await this.textSplitter.splitDocuments(doc)
 
-        // 过滤掉内容太短或空白的文档
+        // 过滤掉内容太短或空白的文档，对PDF文档去除换行符
         const filteredDocs = docs.filter(doc => {
-            const content = doc.pageContent.trim()
+            let content = doc.pageContent.trim()
+            if (isPDF) {
+                content = content.replace(/\n/g, ' ').replace(/\s+/g, ' ')
+                doc.pageContent = content
+            }
             return content.length >= 10 && content !== ''
         })
 
