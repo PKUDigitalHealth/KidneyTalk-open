@@ -117,30 +117,14 @@ export const useFileUpload = (onSuccess: () => void) => {
         });
     };
 
-
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(event.target.files || []);
         const uppy = knowledgeUploader();
         const progressHandler = new ProgressHandler(files.length);
 
-        const numFiles = files.length
-
-        const TOTAL_STAGE = 5
-
         // 添加上传进度监听
         uppy.on('upload-progress', (file, progress) => {
             if (!file || !progress.bytesTotal) return;
-
-            const { bytesUploaded, bytesTotal } = progress;
-            const uploadProgress = (bytesUploaded / bytesTotal) * 100;
-            const fileIndex = files.findIndex(f => f.name === file.name) + 1;
-            progressHandler.emitProgress({
-                value: Number((fileIndex / numFiles * 100).toFixed(2)),
-                title: `🔗[Stage 1/${TOTAL_STAGE}] Uploading Files`,
-                subtitle: `Now is ${fileIndex} of ${numFiles}`,
-                content: `${file.name} is uploading , now progress is ${Math.round(uploadProgress)}%`,
-                addToHistory: false
-            });
         });
 
         files.forEach(file => uppy.addFile({
@@ -155,11 +139,11 @@ export const useFileUpload = (onSuccess: () => void) => {
             const totalFiles = successfulFiles.length;
 
             progressHandler.emitProgress({
-                value: 100,
-                title: `All files already uploaded`,
+                value: 50,
+                title: `Documents all set! Embedding snippets into HNSW now – this will just take a moment. Thanks for your patience while we optimize everything for you! 🌟`,
                 subtitle: `Detail`,
                 content: `Total files is ${files.length}, successfully uploaded ${totalFiles} files`,
-                addToHistory: true
+                addToHistory: false
             });
 
             if (!totalFiles) {
@@ -201,8 +185,8 @@ export const useFileUpload = (onSuccess: () => void) => {
                     await embedDocuments(vectorDBTool, processedDocs);
 
                     progressHandler.emitProgress({
-                        value: Number((fileIndex / totalFiles * 100).toFixed(4)),
-                        title: `Embedding`,
+                        value: 50 + Number((fileIndex / totalFiles * 50).toFixed(4)),
+                        title: `Embedding...`,
                         subtitle: `${file_name}`,
                         content: `Total files is ${files.length}, successfully embedded ${fileIndex} files`,
                         addToHistory: false
@@ -219,10 +203,10 @@ export const useFileUpload = (onSuccess: () => void) => {
             progressHandler.clearHistory();
             progressHandler.emitWithTimeout({
                 value: 100,
-                title: `🎉 All files processed (total ${totalFiles} files)`,
+                title: `All documents are now neatly organized in the knowledge database — happy exploring! 🎉`,
                 subtitle: `Detail`,
-                content: `All files processed (total ${totalFiles} files)`,
-                addToHistory: true
+                content: `All documents processed (total ${totalFiles})`,
+                addToHistory: false
             });
 
         } catch (error) {
