@@ -48,7 +48,7 @@ export const FileList: React.FC<FileListProps> = ({
             <input
                 id="file-upload"
                 type="file"
-                accept="application/pdf,.md,text/markdown"
+                accept="application/pdf,.md,text/markdown,.docx,text/plain"
                 onChange={handleFileUpload}
                 className="hidden"
                 multiple

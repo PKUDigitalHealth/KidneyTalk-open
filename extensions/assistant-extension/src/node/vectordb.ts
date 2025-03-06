@@ -1,6 +1,7 @@
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
 import { TextLoader } from 'langchain/document_loaders/fs/text'
+import { DocxLoader } from "langchain/document_loaders/fs/docx"
 import { DocumentLoader } from 'langchain/document_loaders/base'
 import { HNSWLib } from 'langchain/vectorstores/hnswlib'
 import { OllamaEmbeddings } from 'langchain/embeddings/ollama'
@@ -98,8 +99,12 @@ export class VectorDB {
             })
         } else if (filePath.endsWith('.md')) {
             loader = new TextLoader(filePath)
+        } else if (filePath.endsWith('.txt')) {
+            loader = new TextLoader(filePath)
+        } else if (filePath.endsWith('.docx')) {
+            loader = new DocxLoader(filePath)
         } else {
-            throw new Error('不支持的文件类型')
+            throw new Error('不支持的文件类型。支持的格式: PDF, MD, TXT, DOCX')
         }
 
         const doc = await loader.load()
