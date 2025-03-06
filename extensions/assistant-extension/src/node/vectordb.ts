@@ -35,7 +35,7 @@ export class VectorDB {
         })
 
         this.llm = new Ollama({
-            model: 'qwen2.5:7b'
+            model: 'qwen2.5:3b'
         })
 
         this.initVectorStore().catch(error => {

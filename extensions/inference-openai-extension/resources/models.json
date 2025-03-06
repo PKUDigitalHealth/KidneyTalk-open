@@ -5,11 +5,11 @@
         "url": "https://openai.com"
       }
     ],
-    "id": "qwen2.5:7b",
+    "id": "qwen2.5:3b",
     "object": "model",
-    "name": "Qwen2.5:7B",
+    "name": "Qwen2.5:3B",
     "version": "1.2",
-    "description": "Qwen2.5:7B model is extremely good",
+    "description": "Qwen2.5:3B model is extremely good",
     "format": "api",
     "settings": {},
     "parameters": {

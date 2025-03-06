@@ -23,7 +23,7 @@ const DefaultAgentConfig: AgentConfig = {
     name: 'DivergentThinkingAgent',
     emoji: '💡',
     modelConfig: {
-        name: 'qwen2.5:7b',
+        name: 'qwen2.5:3b',
         temperature: 0.5,
         topP: 0.9,
         topK: 40,
