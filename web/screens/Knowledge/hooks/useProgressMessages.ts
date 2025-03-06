@@ -17,6 +17,11 @@ export const useProgressMessages = () => {
                 return;
             }
 
+            if (data.value === 0 && !data.title) {
+                setCurrentProgress(null);
+                return;
+            }
+
             const timestamp = Date.now();
             messageCountRef.current += 1;
 
