@@ -23,12 +23,12 @@ type Props = {
 
 const DEFAULT_MODELS = [
   {
-    name: 'deepseek-r1',
+    name: 'deepseek-r1:latest',
     displayName: 'deepseek-r1:latest',
   },
   {
-    name: 'qwen2.5:3b',
-    displayName: 'qwen2.5:3B',
+    name: 'qwen2.5:0.5b', // TODO 调试完成后需要改为3b的模型
+    displayName: 'qwen2.5:0.5b',
   },
   {
     name: 'bge-m3:567m',
@@ -97,18 +97,77 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
 
   const refDropdown = useClickOutside(() => setIsOpen(false))
 
+  // 添加一个辅助函数来检查是否所有默认模型都已下载
+  const areAllDefaultModelsDownloaded = (localModels: LocalModel[]) => {
+    return DEFAULT_MODELS.every(defaultModel => 
+      localModels.some(model => model.name === defaultModel.name)
+    )
+  }
+
+  // 修改批量下载处理函数
+  const handleBatchDownload = async () => {
+    // 获取未下载的默认模型
+    const undownloadedModels = DEFAULT_MODELS.filter(defaultModel => 
+      !localModels.some(model => model.name === defaultModel.name)
+    )
+
+    // 逐个下载模型
+    for (const defaultModel of undownloadedModels) {
+      try {
+        setDownloadProgress({ 
+          modelName: defaultModel.name, 
+          status: 'starting' 
+        })
+        
+        await pullModel(defaultModel.name, {
+          onProgress: (response) => {
+            if (response.status === 'success') {
+              setDownloadProgress(null)
+              listLocalModels().then(setLocalModels)
+            } else if (response.total && response.completed) {
+              setDownloadProgress({
+                modelName: defaultModel.name,
+                status: response.status,
+                progress: (response.completed / response.total) * 100
+              })
+            } else {
+              setDownloadProgress({
+                modelName: defaultModel.name,
+                status: response.status
+              })
+            }
+          }
+        })
+      } catch (error) {
+        alert(`Failed to download ${defaultModel.name}`)
+        setDownloadProgress(null)
+      }
+    }
+  }
+
   return (
     <CenterPanelContainer isShowStarterScreen={isShowStarterScreen}>
       <ScrollArea className="flex h-full w-full items-center">
         <div className="relative mt-4 flex h-full w-full flex-col items-center justify-center">
           <div className="mx-auto flex h-full w-3/4 flex-col items-center justify-center py-16 text-center">
-            {/* <LogoMark
-              className="mx-auto mb-4 animate-wave"
-              width={48}
-              height={48}
-            /> */}
-            <h1 className="text-base font-medium">Ollama Model Hub</h1>
-            <div className="mt-6 w-[320px] md:w-[400px]">
+            <div className="flex items-center gap-2">
+              <Tooltip
+                trigger={
+                  <a
+                    href="https://ollama.com/search"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-base font-medium hover:underline"
+                  >
+                    Model Hub
+                  </a>
+                }
+                content={
+                  <span className="text-sm">Click to view all available Ollama models</span>
+                }
+              />
+            </div>
+            <div className="mt-6 w-[360px] md:w-[400px]">
               <Fragment>
                 <div className="relative" ref={refDropdown}>
                   <div className="flex gap-2 ">
@@ -123,6 +182,7 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                     />
                     <Button
                       theme="primary"
+                      size='small'
                       disabled={!searchValue.trim() || downloadProgress !== null}
                       onClick={() => {
                         const modelName = searchValue.trim()
@@ -133,7 +193,6 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                             if (response.status === 'success') {
                               setDownloadProgress(null)
                               setSearchValue('')
-                              // 刷新本地模型列表
                               listLocalModels().then(setLocalModels)
                             } else if (response.total && response.completed) {
                               setDownloadProgress({
@@ -154,50 +213,36 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                         })
                       }}
                     >
-                      Download
+                      <DownloadCloudIcon size={16} />
                     </Button>
                   </div>
-                  
-                  {/* 下载进度显示 */}
-                  {downloadProgress && (
-                    <div className="mt-4 rounded-lg border border-[hsla(var(--app-border))] bg-[hsla(var(--app-bg))] p-4">
-                      <div className="mb-2 flex items-center justify-between">
-                        <span className="font-medium">{downloadProgress.modelName}</span>
-                        <span className="text-sm text-[hsla(var(--text-secondary))]">
-                          {downloadProgress.status === 'starting' && 'Preparing download...'}
-                          {downloadProgress.status === 'pulling manifest' && 'Getting model info...'}
-                          {downloadProgress.status === 'downloading' && 'Downloading...'}
-                          {downloadProgress.status === 'verifying sha256 digest' && 'Verifying file...'}
-                          {downloadProgress.status === 'writing manifest' && 'Writing file...'}
-                        </span>
-                      </div>
-                      
-                      {downloadProgress.progress !== undefined && (
-                        <div className="flex items-center gap-2">
-                          <Progress
-                            className="flex-1"
-                            value={downloadProgress.progress}
-                          />
-                          <span className="min-w-[4rem] text-right text-sm">
-                            {downloadProgress.progress.toFixed(1)}%
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </div>
                 <div className="mt-6 flex items-center justify-between">
                   <h2 className="text-[hsla(var(--text-secondary))]">
                     Available Models
                   </h2>
-                  {/* <p
-                    className="cursor-pointer text-sm text-[hsla(var(--text-secondary))]"
-                    onClick={() => {
-                      setMainViewState(MainViewState.Hub)
-                    }}
-                  >
-                    See All
-                  </p> */}
+                  <div className="flex items-center gap-2">
+                    <Tooltip
+                      trigger={
+                        <Button
+                          theme="primary"
+                          size='small'
+                          disabled={areAllDefaultModelsDownloaded(localModels) || downloadProgress !== null}
+                          onClick={handleBatchDownload}
+                          className="text-sm"
+                        >
+                          Download All Default Models
+                        </Button>
+                      }
+                      content={
+                        <span className="text-sm">
+                          {areAllDefaultModelsDownloaded(localModels) 
+                            ? "All default models have been downloaded"
+                            : "Download all missing default models"}
+                        </span>
+                      }
+                    />
+                  </div>
                 </div>
 
                 {DEFAULT_MODELS.map((defaultModel) => {
@@ -289,6 +334,7 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                             {!isDownloaded && (
                               <Button
                                 theme="ghost"
+                                size='small'
                                 className="!bg-[hsla(var(--secondary-bg))]"
                                 onClick={() => {
                                   setDownloadProgress({ 
@@ -320,7 +366,7 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                                   })
                                 }}
                               >
-                                Download
+                                <DownloadCloudIcon size={16} />
                               </Button>
                             )}
                           </div>
