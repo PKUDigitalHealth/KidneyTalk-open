@@ -61,16 +61,7 @@ export function useStarterScreen() {
       }
       setExtensionHasSettings(extensionsMenu)
     }
-    getAllSettings()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
-  const isAnyRemoteModelConfigured = useMemo(
-    () => extensionHasSettings.some((x) => x.apiKey.length > 1),
-    [extensionHasSettings]
-  )
-
-  useEffect(() => {
     const checkLocalModels = async () => {
       try {
         const models = await listLocalModels()
@@ -79,12 +70,22 @@ export function useStarterScreen() {
         setLocalModels([])
       }
     }
-    
+
+    // 初始化执行
+    getAllSettings()
     checkLocalModels()
+    
+    // 设置定时器定期检查本地模型
     const interval = setInterval(checkLocalModels, 3000)
     
+    // 清理函数
     return () => clearInterval(interval)
   }, [])
+
+  const isAnyRemoteModelConfigured = useMemo(
+    () => extensionHasSettings.some((x) => x.apiKey.length > 1),
+    [extensionHasSettings]
+  )
 
   const isShowStarterScreen = useMemo(
     () => !areAllDefaultModelsDownloaded(localModels),
