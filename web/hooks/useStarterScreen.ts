@@ -1,21 +1,25 @@
 import { useState, useEffect, useMemo } from 'react'
 
-import { useAtomValue } from 'jotai'
+// import { useAtomValue } from 'jotai'
 
-import { isLocalEngine } from '@/utils/modelEngine'
+// import { isLocalEngine } from '@/utils/modelEngine'
 
 import { extensionManager } from '@/extension'
-import { downloadedModelsAtom } from '@/helpers/atoms/Model.atom'
-import { threadsAtom } from '@/helpers/atoms/Thread.atom'
+// import { downloadedModelsAtom } from '@/helpers/atoms/Model.atom'
+// import { threadsAtom } from '@/helpers/atoms/Thread.atom'
+
+import { areAllDefaultModelsDownloaded } from '@/screens/Thread/ThreadCenterPanel/ChatBody/OnDeviceStarterScreen'
+import { listLocalModels, LocalModel } from '@/utils/ollama'
 
 export function useStarterScreen() {
-  const downloadedModels = useAtomValue(downloadedModelsAtom)
-  const threads = useAtomValue(threadsAtom)
+  // const downloadedModels = useAtomValue(downloadedModelsAtom)
+  // const threads = useAtomValue(threadsAtom)
+  const [localModels, setLocalModels] = useState<LocalModel[]>([])
 
-  const isDownloadALocalModel = useMemo(
-    () => downloadedModels.some((x) => isLocalEngine(x.engine)),
-    [downloadedModels]
-  )
+  // const isDownloadALocalModel = useMemo(
+  //   () => downloadedModels.some((x) => isLocalEngine(x.engine)),
+  //   [downloadedModels]
+  // )
 
   const [extensionHasSettings, setExtensionHasSettings] = useState<
     { name?: string; setting: string; apiKey: string; provider: string }[]
@@ -66,10 +70,25 @@ export function useStarterScreen() {
     [extensionHasSettings]
   )
 
+  useEffect(() => {
+    const checkLocalModels = async () => {
+      try {
+        const models = await listLocalModels()
+        setLocalModels(models)
+      } catch (error) {
+        setLocalModels([])
+      }
+    }
+    
+    checkLocalModels()
+    const interval = setInterval(checkLocalModels, 3000)
+    
+    return () => clearInterval(interval)
+  }, [])
+
   const isShowStarterScreen = useMemo(
-    () =>
-      !isAnyRemoteModelConfigured && !isDownloadALocalModel && !threads.length,
-    [isAnyRemoteModelConfigured, isDownloadALocalModel, threads]
+    () => !areAllDefaultModelsDownloaded(localModels),
+    [localModels]
   )
 
   return {

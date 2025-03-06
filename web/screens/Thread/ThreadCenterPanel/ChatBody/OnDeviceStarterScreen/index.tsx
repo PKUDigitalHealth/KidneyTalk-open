@@ -21,14 +21,14 @@ type Props = {
   isShowStarterScreen?: boolean
 }
 
-const DEFAULT_MODELS = [
+export const DEFAULT_MODELS = [
   {
     name: 'deepseek-r1:latest',
     displayName: 'deepseek-r1:latest',
   },
   {
-    name: 'qwen2.5:0.5b', // TODO 调试完成后需要改为3b的模型
-    displayName: 'qwen2.5:0.5b',
+    name: 'qwen2.5:3b',
+    displayName: 'qwen2.5:3b',
   },
   {
     name: 'bge-m3:567m',
@@ -42,6 +42,13 @@ const getDefaultModelStatus = (modelName: string, localModels: LocalModel[]) => 
     isDownloaded,
     model: localModels.find(model => model.name === modelName)
   }
+}
+
+// 添加一个辅助函数来检查是否所有默认模型都已下载
+export const areAllDefaultModelsDownloaded = (localModels: LocalModel[]) => {
+  return DEFAULT_MODELS.every(defaultModel => 
+    localModels.some(model => model.name === defaultModel.name)
+  )
 }
 
 const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
@@ -104,12 +111,7 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
 
   const refDropdown = useClickOutside(() => setIsOpen(false))
 
-  // 添加一个辅助函数来检查是否所有默认模型都已下载
-  const areAllDefaultModelsDownloaded = (localModels: LocalModel[]) => {
-    return DEFAULT_MODELS.every(defaultModel => 
-      localModels.some(model => model.name === defaultModel.name)
-    )
-  }
+
 
   // 修改批量下载处理函数
   const handleBatchDownload = async () => {
