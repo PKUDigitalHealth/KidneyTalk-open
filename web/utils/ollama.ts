@@ -56,10 +56,7 @@ export const listLocalModels = async (): Promise<LocalModel[]> => {
         const data: ListModelsResponse = await response.json()
         return data.models
     } catch (error) {
-        console.error('获取本地模型列表失败:', error)
-        // 提示用户ollama服务未启动
-        alert('Ollama服务未启动，请先启动Ollama服务')
-        return []
+        throw new Error('Ollama service is not running, please start Ollama service first')
     }
 }
 

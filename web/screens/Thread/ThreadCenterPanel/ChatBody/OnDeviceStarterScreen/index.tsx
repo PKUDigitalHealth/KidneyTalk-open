@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react'
 import { Button, Input, Progress, ScrollArea, Tooltip } from '@janhq/joi'
 import { useClickOutside } from '@janhq/joi'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { DownloadCloudIcon, Trash2Icon, StarIcon } from 'lucide-react'
+import { DownloadCloudIcon, Trash2Icon, StarIcon, CheckCircle2Icon, XCircleIcon } from 'lucide-react'
 import CenterPanelContainer from '@/containers/CenterPanelContainer'
 import { modelDownloadStateAtom } from '@/hooks/useDownloadState'
 import { formatDownloadPercentage, toGibibytes } from '@/utils/converter'
@@ -47,6 +47,7 @@ const getDefaultModelStatus = (modelName: string, localModels: LocalModel[]) => 
 const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
   const [searchValue, setSearchValue] = useState('')
   const [isOpen, setIsOpen] = useState(Boolean(searchValue.length))
+  const [isOllamaInstalled, setIsOllamaInstalled] = useState(false)
   const downloadingModels = useAtomValue(getDownloadingModelAtom)
   const downloadStates = useAtomValue(modelDownloadStateAtom)
 
@@ -61,13 +62,19 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
   } | null>(null)
 
   useEffect(() => {
-    const fetchLocalModels = async () => {
-      const models = await listLocalModels()
-      setLocalModels(models)
+    const checkOllamaInstallation = async () => {
+      try {
+        const models = await listLocalModels()
+        setIsOllamaInstalled(true)
+        setLocalModels(models)
+      } catch (error) {
+        setIsOllamaInstalled(false)
+        setLocalModels([])
+      }
     }
     
-    fetchLocalModels()
-    const interval = setInterval(fetchLocalModels, 30000)
+    checkOllamaInstallation()
+    const interval = setInterval(checkOllamaInstallation, 3000)
     
     return () => clearInterval(interval)
   }, [])
@@ -151,6 +158,33 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
         <div className="relative mt-4 flex h-full w-full flex-col items-center justify-center">
           <div className="mx-auto flex h-full w-3/4 flex-col items-center justify-center py-16 text-center">
             <div className="flex items-center gap-2">
+              {isOllamaInstalled ? (
+                <Tooltip
+                  trigger={
+                    <CheckCircle2Icon size={18} className="text-green-500" />
+                  }
+                  content={
+                    <span className="text-sm">Ollama is installed and running!</span>
+                  }
+                />
+              ) : (
+                <Tooltip
+                  trigger={
+                    <a
+                      href="https://ollama.com/download"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <XCircleIcon size={18} className="text-red-500 cursor-pointer" />
+                    </a>
+                  }
+                  content={
+                    <span className="text-sm">
+                      Ollama service not detected. No worries - please restart the Ollama program and KidneyTalk-open, or click this icon to download Ollama
+                    </span>
+                  }
+                />
+              )}
               <Tooltip
                 trigger={
                   <a
@@ -179,11 +213,12 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                       placeholder="like: qwen2.5:7B"
                       prefixIcon={<DownloadCloudIcon size={16} />}
                       className="flex-1 w-[220px] md:w-[310px]"
+                      disabled={!isOllamaInstalled}
                     />
                     <Button
                       theme="primary"
                       size='small'
-                      disabled={!searchValue.trim() || downloadProgress !== null}
+                      disabled={!isOllamaInstalled || !searchValue.trim() || downloadProgress !== null}
                       onClick={() => {
                         const modelName = searchValue.trim()
                         setDownloadProgress({ modelName, status: 'starting' })
@@ -221,28 +256,32 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                   <h2 className="text-[hsla(var(--text-secondary))]">
                     Available Models
                   </h2>
-                  <div className="flex items-center gap-2">
-                    <Tooltip
-                      trigger={
-                        <Button
-                          theme="primary"
-                          size='small'
-                          disabled={areAllDefaultModelsDownloaded(localModels) || downloadProgress !== null}
-                          onClick={handleBatchDownload}
-                          className="text-sm"
-                        >
-                          Download All Default Models
-                        </Button>
-                      }
-                      content={
-                        <span className="text-sm">
-                          {areAllDefaultModelsDownloaded(localModels) 
-                            ? "All default models have been downloaded"
-                            : "Download all missing default models"}
-                        </span>
-                      }
-                    />
-                  </div>
+                  {isOllamaInstalled && (
+                    <div className="flex items-center gap-2">
+                      <Tooltip
+                        trigger={
+                          <Button
+                            theme="primary"
+                            size='small'
+                            disabled={areAllDefaultModelsDownloaded(localModels) || downloadProgress !== null}
+                            onClick={handleBatchDownload}
+                            className="text-sm"
+                          >
+                            {areAllDefaultModelsDownloaded(localModels) 
+                              ? "Done"
+                              : "Get Default Models"}
+                          </Button>
+                        }
+                        content={
+                          <span className="text-sm">
+                            {areAllDefaultModelsDownloaded(localModels) 
+                              ? "All default models have been downloaded"
+                              : "Download all missing default models"}
+                          </span>
+                        }
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {DEFAULT_MODELS.map((defaultModel) => {
@@ -336,6 +375,7 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                                 theme="ghost"
                                 size='small'
                                 className="!bg-[hsla(var(--secondary-bg))]"
+                                disabled={!isOllamaInstalled}
                                 onClick={() => {
                                   setDownloadProgress({ 
                                     modelName: defaultModel.name, 
