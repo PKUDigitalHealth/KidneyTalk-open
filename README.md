@@ -11,6 +11,11 @@ Key Features:
 - 🖥️ Zero-barrier graphical interface
 - 🔄 Adaptive knowledge retrieval framework
 
+## 📦 Installation Package
+
+The installation package is in its final stage of preparation and will be released soon. Stay tuned!
+
+
 ## Requirements
 
 - **MacOS**: 13 or higher
