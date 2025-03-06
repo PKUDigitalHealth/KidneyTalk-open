@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { Button, Input, Progress, ScrollArea } from '@janhq/joi'
+import { Button, Input, Progress, ScrollArea, Tooltip } from '@janhq/joi'
 import { useClickOutside } from '@janhq/joi'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { DownloadCloudIcon, Trash2Icon } from 'lucide-react'
+import { DownloadCloudIcon, Trash2Icon, StarIcon } from 'lucide-react'
 import CenterPanelContainer from '@/containers/CenterPanelContainer'
 import { modelDownloadStateAtom } from '@/hooks/useDownloadState'
 import { formatDownloadPercentage, toGibibytes } from '@/utils/converter'
@@ -23,17 +23,17 @@ type Props = {
 
 const DEFAULT_MODELS = [
   {
-    name: 'qwen2.5:7b',
-    displayName: 'qwen2.5:7B',
+    name: 'deepseek-r1',
+    displayName: 'deepseek-r1:latest',
+  },
+  {
+    name: 'qwen2.5:3b',
+    displayName: 'qwen2.5:3B',
   },
   {
     name: 'bge-m3:567m',
     displayName: 'bge-m3:567M',
   },
-  {
-    name: 'deepseek-r1',
-    displayName: 'deepseek-r1:7b',
-  }
 ] as const
 
 const getDefaultModelStatus = (modelName: string, localModels: LocalModel[]) => {
@@ -150,7 +150,7 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                           }
                         }).catch(() => {
                           setDownloadProgress(null)
-                          alert('下载失败，请检查模型名称是否正确')
+                          alert('Download failed, please check if the model name is correct')
                         })
                       }}
                     >
@@ -164,11 +164,11 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                       <div className="mb-2 flex items-center justify-between">
                         <span className="font-medium">{downloadProgress.modelName}</span>
                         <span className="text-sm text-[hsla(var(--text-secondary))]">
-                          {downloadProgress.status === 'starting' && '准备下载...'}
-                          {downloadProgress.status === 'pulling manifest' && '获取模型信息...'}
-                          {downloadProgress.status === 'downloading' && '下载中...'}
-                          {downloadProgress.status === 'verifying sha256 digest' && '验证文件...'}
-                          {downloadProgress.status === 'writing manifest' && '写入文件...'}
+                          {downloadProgress.status === 'starting' && 'Preparing download...'}
+                          {downloadProgress.status === 'pulling manifest' && 'Getting model info...'}
+                          {downloadProgress.status === 'downloading' && 'Downloading...'}
+                          {downloadProgress.status === 'verifying sha256 digest' && 'Verifying file...'}
+                          {downloadProgress.status === 'writing manifest' && 'Writing file...'}
                         </span>
                       </div>
                       
@@ -210,7 +210,17 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                       className="my-2 flex items-start justify-between gap-2 border-b border-[hsla(var(--app-border))] pb-4 pt-1"
                     >
                       <div className="w-full text-left">
-                        <h6 className="mt-1.5 font-medium">{defaultModel.displayName}</h6>
+                        <h6 className="mt-1.5 font-medium flex items-center gap-2">
+                          {defaultModel.displayName}
+                          <Tooltip
+                            trigger={
+                              <StarIcon size={16} className="text-yellow-500 cursor-help" />
+                            }
+                            content={
+                              <span className="text-sm">This is a default model. All default models must be downloaded before starting a Chat</span>
+                            }
+                          />
+                        </h6>
                         {isDownloaded && model && (
                           <div className="mt-1 flex items-center gap-2 text-sm text-[hsla(var(--text-secondary))]">
                             <span>{model.details.parameter_size}</span>
@@ -242,11 +252,11 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                             </div>
                           </div>
                           <span className="text-sm text-[hsla(var(--text-secondary))]">
-                            {downloadProgress?.status === 'starting' && '准备下载...'}
-                            {downloadProgress?.status === 'pulling manifest' && '获取模型信息...'}
-                            {downloadProgress?.status === 'downloading' && '下载中...'}
-                            {downloadProgress?.status === 'verifying sha256 digest' && '验证文件...'}
-                            {downloadProgress?.status === 'writing manifest' && '写入文件...'}
+                            {downloadProgress?.status === 'starting' && 'Preparing download...'}
+                            {downloadProgress?.status === 'pulling manifest' && 'Getting model info...'}
+                            {downloadProgress?.status === 'downloading' && 'Downloading...'}
+                            {downloadProgress?.status === 'verifying sha256 digest' && 'Verifying file...'}
+                            {downloadProgress?.status === 'writing manifest' && 'Writing file...'}
                           </span>
                           {model && (
                             <span className="text-[hsla(var(--text-secondary))]">
@@ -262,13 +272,13 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                                 theme="ghost"
                                 className="!bg-[hsla(var(--danger-bg))]"
                                 onClick={async () => {
-                                  if (window.confirm(`确定要删除模型 ${defaultModel.name} 吗？`)) {
+                                  if (window.confirm(`Are you sure you want to delete model ${defaultModel.name}?`)) {
                                     const success = await deleteModel(defaultModel.name)
                                     if (success) {
                                       const models = await listLocalModels()
                                       setLocalModels(models)
                                     } else {
-                                      alert('删除模型失败')
+                                      alert('Failed to delete model')
                                     }
                                   }
                                 }}
@@ -306,7 +316,7 @@ const OnDeviceStarterScreen = ({ isShowStarterScreen }: Props) => {
                                     }
                                   }).catch(() => {
                                     setDownloadProgress(null)
-                                    alert('下载失败，请检查模型名称是否正确')
+                                    alert('Download failed, please check if the model name is correct')
                                   })
                                 }}
                               >
