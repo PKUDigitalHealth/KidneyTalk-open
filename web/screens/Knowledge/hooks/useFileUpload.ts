@@ -141,7 +141,7 @@ export const useFileUpload = (onSuccess: () => void) => {
             progressHandler.emitProgress({
                 value: 50,
                 title: `Documents all set! Embedding snippets into HNSW now – this will just take a moment. Thanks for your patience while we optimize everything for you! 🌟`,
-                subtitle: `Detail`,
+                subtitle: ``,
                 content: `Total files is ${files.length}, successfully uploaded ${totalFiles} files`,
                 addToHistory: false
             });
@@ -204,7 +204,7 @@ export const useFileUpload = (onSuccess: () => void) => {
             progressHandler.emitWithTimeout({
                 value: 100,
                 title: `All documents are now neatly organized in the knowledge database — happy exploring! 🎉`,
-                subtitle: `Detail`,
+                subtitle: ``,
                 content: `All documents processed (total ${totalFiles})`,
                 addToHistory: false
             });
@@ -215,7 +215,7 @@ export const useFileUpload = (onSuccess: () => void) => {
             progressHandler.emitWithTimeout({
                 value: 0,
                 title: `🚨 File processing failed`,
-                subtitle: `Detail`,
+                subtitle: ``,
                 content: `File processing failed`,
                 addToHistory: true
             });
