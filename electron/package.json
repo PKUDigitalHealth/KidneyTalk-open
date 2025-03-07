@@ -1,15 +1,15 @@
 {
   "name": "jan",
-  "version": "0.1.3",
+  "version": "1.0.0",
   "main": "./build/main.js",
-  "author": "Jan <service@jan.ai>",
+  "author": "PKU Digital Health",
   "license": "MIT",
-  "productName": "Jan",
-  "homepage": "https://github.com/janhq/jan/tree/main/electron",
-  "description": "Use offline LLMs with your own data. Run open source models like Llama2 or Falcon on your internal computers/servers.",
+  "productName": "KidneyTalk",
+  "homepage": "https://github.com/PKUDigitalHealth/kidneytalk-open",
+  "description": "KidneyTalk-open",
   "build": {
-    "appId": "jan.ai.app",
-    "productName": "Jan",
+    "appId": "kidneytalk-open.PKUDigitalHealth.app",
+    "productName": "KidneyTalk",
     "files": [
       "renderer/**/*",
       "build/**/*.{js,map}",
@@ -32,8 +32,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "janhq",
-        "repo": "jan"
+        "owner": "PKUDigitalHealth",
+        "repo": "kidneytalk-open"
       }
     ],
     "extends": null,
@@ -74,7 +74,7 @@
         ]
       }
     ],
-    "artifactName": "jan-${os}-${arch}-${version}.${ext}"
+    "artifactName": "kidneytalk-open-${os}-${arch}-${version}.${ext}"
   },
   "scripts": {
     "lint": "eslint . --ext \".js,.jsx,.ts,.tsx\"",
