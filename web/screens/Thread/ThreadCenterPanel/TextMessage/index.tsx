@@ -92,7 +92,7 @@ const MessageContainer: React.FC<
           {isUser
             ? props.role
             // : (activeAssistant?.assistant_name ?? props.role)}
-            : ('DeskLLM')}
+            : ('AGAgent')}
         </div>
         <p className="text-xs font-medium text-gray-400">
           {props.created_at &&
