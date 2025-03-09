@@ -13,13 +13,26 @@ Key Features:
 
 ## 📦 Installation Package
 
-The installation package is in its final stage of preparation and will be released soon. Stay tuned!
+You can now download the KidneyTalk-open installation package from our release page:
+https://github.com/PKUDigitalHealth/KidneyTalk-open/releases/tag/v1.0.0
 
+We're excited to share this with the community and look forward to your feedback! 🎉
 
-## Requirements
+## 💻 Requirements
 
 - **MacOS**: 13 or higher
 - **Ollama**: Download and install Ollama from https://ollama.ai/. After installation, you can proceed with the next steps without worrying about Ollama anymore.
+
+## 📺 Installation Tutorial Video
+
+We've prepared a detailed video tutorial to guide you through the KidneyTalk installation process! 🎬
+
+Watch our step-by-step installation guide on Bilibili: 
+[KidneyTalk Installation Tutorial](https://www.bilibili.com/video/BV1jMRaYFECy/?vd_source=5dad28f5fde62951655f7811ad181b65) ✨
+
+<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=114131273260244&bvid=BV1jMRaYFECy&cid=28775680205&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+
+Don't hesitate to follow along with the video - we've made sure to cover everything you need to get started! 💪
 
 ## Acknowledgements
 
