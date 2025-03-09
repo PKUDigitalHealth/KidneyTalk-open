@@ -27,10 +27,10 @@ We're excited to share this with the community and look forward to your feedback
 
 We've prepared a detailed video tutorial to guide you through the KidneyTalk installation process! 🎬
 
-Watch our step-by-step installation guide on Bilibili: 
-[KidneyTalk Installation Tutorial](https://www.bilibili.com/video/BV1jMRaYFECy/?vd_source=5dad28f5fde62951655f7811ad181b65) ✨
+[![KidneyTalk Installation Tutorial](https://img.youtube.com/vi/yuOzPelXfzQ/0.jpg)](https://www.youtube.com/embed/yuOzPelXfzQ?si=-JC7xW32K0-ciX1-)
 
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=114131273260244&bvid=BV1jMRaYFECy&cid=28775680205&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+> 如果您无法访问Youtube，也可以在B站观看：
+[KidneyTalk安装部署教程](https://www.bilibili.com/video/BV1jMRaYFECy/?vd_source=5dad28f5fde62951655f7811ad181b65) ✨
 
 Don't hesitate to follow along with the video - we've made sure to cover everything you need to get started! 💪
 
