@@ -44,3 +44,16 @@ KidneyTalk-open builds on top of other open-source projects:
 ## License
 
 KidneyTalk-open is free and open source, under the **AGPLv3** license.
+
+## Citation
+
+If you find KidneyTalk-open useful, please consider citing our work:
+
+```bibtex
+@article{long2025kidneytalk,
+  title={KidneyTalk-open: No-code Deployment of a Private Large Language Model with Medical Documentation-Enhanced Knowledge Database for Kidney Disease},
+  author={Long, Yongchao and Yang, Chao and Tang, Gongzheng and Wang, Jinwei and Sui, Zhun and Zhou, Yuxi and Hong, Shenda and Zhang, Luxia},
+  journal={arXiv preprint arXiv:2503.04153},
+  year={2025}
+}
+```
