@@ -50,10 +50,13 @@ KidneyTalk-open is free and open source, under the **AGPLv3** license.
 If you find KidneyTalk-open useful, please consider citing our work:
 
 ```bibtex
-@article{long2025kidneytalk,
-  title={KidneyTalk-open: No-code Deployment of a Private Large Language Model with Medical Documentation-Enhanced Knowledge Database for Kidney Disease},
-  author={Long, Yongchao and Yang, Chao and Tang, Gongzheng and Wang, Jinwei and Sui, Zhun and Zhou, Yuxi and Hong, Shenda and Zhang, Luxia},
-  journal={arXiv preprint arXiv:2503.04153},
-  year={2025}
+@misc{long2025kidneytalkopennocodedeploymentprivate,
+      title={KidneyTalk-open: No-code Deployment of a Private Large Language Model with Medical Documentation-Enhanced Knowledge Database for Kidney Disease}, 
+      author={Yongchao Long and Chao Yang and Gongzheng Tang and Jinwei Wang and Zhun Sui and Yuxi Zhou and Shenda Hong and Luxia Zhang},
+      year={2025},
+      eprint={2503.04153},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2503.04153}, 
 }
 ```
